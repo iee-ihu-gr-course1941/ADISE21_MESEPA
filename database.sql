@@ -1,6 +1,6 @@
 /*
 SQLyog Trial v13.1.8 (64 bit)
-MySQL - 10.4.22-MariaDB : Database - quarto_mesepa
+MySQL - 10.4.21-MariaDB : Database - quarto_mesepa
 *********************************************************************
 */
 
@@ -113,60 +113,6 @@ CREATE TABLE `players` (
 insert  into `players`(`username`,`piece_color`,`token`,`last_action`) values 
 (NULL,'B',NULL,NULL),
 (NULL,'W',NULL,NULL);
-
-/* Procedure structure for procedure `clean_board` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `clean_board` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `clean_board`()
-BEGIN
-	REPLACE INTO board SELECT * FROM board_empty;
-	UPDATE `players` SET username=NULL, token=NULL;
-    UPDATE `game_status` SET `status`='not active', `p_turn`=NULL, `result`=NULL;
-    END */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `move_piece` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `move_piece` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `move_piece`(x1 tinyint,y1 tinyint,x2 tinyint,y2 tinyint)
-BEGIN
-	declare  p, p_color char;
-	
-	select  piece, piece_color into p, p_color FROM `board` WHERE X=x1 AND Y=y1;
-	
-	update board
-	set piece=p, piece_color=p_color
-	where x=x2 and y=y2;
-	
-	UPDATE board
-	SET piece=null,piece_color=null
-	WHERE X=x1 AND Y=y1;
-	update game_status set p_turn=if(p_color='W','B','W');
-	
-    END */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `test_move` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `test_move` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `test_move`()
-BEGIN
-SELECT * FROM
-board B1 INNER JOIN board B2
-WHERE B1.x=2 AND B1.y=2
-AND (B2.`piece_color` IS NULL OR B2.`piece_color`<>B1.`piece_color`)
-AND B1.x=B2.x AND B1.y<B2.y AND (B2.y-B1.y)<=2 ;
-    END */$$
-DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
