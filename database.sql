@@ -31,7 +31,7 @@ CREATE TABLE `board` (
 /*Data for the table `board` */
 
 insert  into `board`(`x`,`y`,`piece_color`,`piece`) values 
-(1,1,NULL,NULL),
+(1,1,NULL,'CLS'),
 (2,1,NULL,NULL),
 (3,1,NULL,NULL),
 (4,1,NULL,NULL),
@@ -86,15 +86,15 @@ DROP TABLE IF EXISTS `game_status`;
 
 CREATE TABLE `game_status` (
   `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
-  `p_turn` enum('W','B') DEFAULT NULL,
-  `result` enum('B','W','D') DEFAULT NULL,
+  `p_turn` enum('1','2') DEFAULT NULL,
+  `result` enum('1','2','D') DEFAULT NULL,
   `last_change` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `game_status` */
 
 insert  into `game_status`(`status`,`p_turn`,`result`,`last_change`) values 
-('not active',NULL,NULL,'2021-11-22 20:04:52');
+('not active',NULL,NULL,'2021-11-22 18:04:52');
 
 /*Table structure for table `players` */
 
@@ -114,6 +114,19 @@ insert  into `players`(`username`,`piece_color`,`token`,`last_action`) values
 (NULL,'B',NULL,NULL),
 (NULL,'W',NULL,NULL);
 
+/* Trigger structure for table `game_status` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `game_status_update` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `game_status_update` BEFORE UPDATE ON `game_status` FOR EACH ROW BEGIN
+		SET NEW.last_change = NOW();
+END */$$
+
+
+DELIMITER ;
+
 /* Procedure structure for procedure `clean_board` */
 
 /*!50003 DROP PROCEDURE IF EXISTS  `clean_board` */;
@@ -128,44 +141,21 @@ BEGIN
     END */$$
 DELIMITER ;
 
-/* Procedure structure for procedure `move_piece` */
+/* Procedure structure for procedure `place_piece` */
 
-/*!50003 DROP PROCEDURE IF EXISTS  `move_piece` */;
+/*!50003 DROP PROCEDURE IF EXISTS  `place_piece` */;
 
 DELIMITER $$
 
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `move_piece`(x1 tinyint,y1 tinyint,x2 tinyint,y2 tinyint)
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `place_piece`(x1 tinyint,y1 tinyint)
 BEGIN
 	declare  p, p_color char;
 	
 	select  piece, piece_color into p, p_color FROM `board` WHERE X=x1 AND Y=y1;
 	
 	update board
-	set piece=p, piece_color=p_color
-	where x=x2 and y=y2;
-	
-	UPDATE board
-	SET piece=null,piece_color=null
-	WHERE X=x1 AND Y=y1;
-	update game_status set p_turn=if(p_color='W','B','W');
-	
-    END */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `test_move` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `test_move` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `test_move`()
-BEGIN
-SELECT * FROM
-board B1 INNER JOIN board B2
-WHERE B1.x=2 AND B1.y=2
-AND (B2.`piece_color` IS NULL OR B2.`piece_color`<>B1.`piece_color`)
-AND B1.x=B2.x AND B1.y<B2.y AND (B2.y-B1.y)<=2 ;
-    END */$$
+	set piece=p, piece_color=p_color;
+	END */$$
 DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
