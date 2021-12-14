@@ -21,13 +21,11 @@ switch ($r=array_shift($request)) {
 			}
 		break;
     case 'status': 
-        if(sizeof($request)==0){
-                        show_status();
-                   }
-		   else{
-                   header("HTTP/1.1 404 Not Found");
-                   }
-		break;
+        if(sizeof($request)==0) 
+                        {handle_status($method);}
+			else {
+                        header("HTTP/1.1 404 Not Found");}
+			break;
     case 'players': handle_player($method, $request,$input);
                 break;
 
@@ -40,14 +38,23 @@ function handle_board($method) {
             show_board();
     } else if ($method=='POST') {
             reset_board();
+   }else {
+        header('HTTP/1.1 405 Method Not Allowed');
     }
-    
 }
-
 function handle_piece($method,$x,$y,$input) {
   
 }
 
 function handle_player($method,$p,$input) {}
+
+function handle_status($method) {
+        if($method=='GET') {
+            show_status();
+        } else {
+            header('HTTP/1.1 405 Method Not Allowed');
+        }
+    }
+
 
  ?>
