@@ -1,6 +1,6 @@
 /*
-SQLyog Trial v13.1.8 (64 bit)
-MySQL - 10.4.22-MariaDB : Database - quarto_mesepa
+SQLyog Ultimate v13.1.1 (64 bit)
+MySQL - 10.3.31-MariaDB-0+deb10u1-log : Database - quarto_mesepa
 *********************************************************************
 */
 
@@ -31,7 +31,7 @@ CREATE TABLE `board` (
 /*Data for the table `board` */
 
 insert  into `board`(`x`,`y`,`piece_color`,`piece`) values 
-(1,1,NULL,'CLS'),
+(1,1,NULL,NULL),
 (2,1,NULL,NULL),
 (3,1,NULL,NULL),
 (4,1,NULL,NULL),
@@ -40,7 +40,7 @@ insert  into `board`(`x`,`y`,`piece_color`,`piece`) values
 (3,2,NULL,NULL),
 (4,2,NULL,NULL),
 (1,3,NULL,NULL),
-(2,3,NULL,NULL),
+(2,3,'B','CLS'),
 (3,3,NULL,NULL),
 (4,3,NULL,NULL),
 (1,4,NULL,NULL),
@@ -94,7 +94,8 @@ CREATE TABLE `game_status` (
 /*Data for the table `game_status` */
 
 insert  into `game_status`(`status`,`p_turn`,`result`,`last_change`) values 
-('not active',NULL,NULL,'2021-11-22 18:04:52');
+('not active',NULL,'1','2021-12-14 13:38:20'),
+('not active','1','D','2021-12-14 13:41:27');
 
 /*Table structure for table `players` */
 
@@ -147,15 +148,13 @@ DELIMITER ;
 
 DELIMITER $$
 
-/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `place_piece`(x1 tinyint,y1 tinyint)
+/*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `place_piece`(x1 tinyint,y1 tinyint, p VARCHAR(255),p_c VARCHAR(255))
 BEGIN
-	declare  p, p_color char;
-	
-	select  piece, piece_color into p, p_color FROM `board` WHERE X=x1 AND Y=y1;
 	
 	update board
-	set piece=p, piece_color=p_color;
-	END */$$
+	set piece=p, piece_color=p_c
+	where x=x1 and y=y1;
+	 END */$$
 DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
