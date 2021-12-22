@@ -1,0 +1,25 @@
+body {
+ 
+    
+  }
+
+#quarto_table TD {
+    width: 7em; 
+    height:7em;
+    border:1px solid rgb(240, 240, 240);
+    text-align:center;
+    background-color:rgb(95, 29, 29);
+    
+}
+#quarto_table{
+    transform: rotate(45deg);
+   
+    margin:0 auto;
+    margin-top: 25%;
+    
+    
+  
+  
+   
+}
+
