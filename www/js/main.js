@@ -1,8 +1,9 @@
 var me={token:null,piece_color:null};
-
+var game_status={};
 
 
 $(function () {
+    $('#btn').click(draw_empty_board);
 	start();
 });
 
@@ -12,15 +13,25 @@ st=` <div class="input-group">
 <div class="input-group-prepend">
   <span class="input-group-text" id="">Name of a&b player</span>
 </div>
-<input type="text" class="form-control">
-<input type="text" class="form-control">
+<input type="text" class="form-control" id="username1">
+<input type="text" class="form-control" id="username2">
 </div>
-<button  onclick="btn()" class="btn" >
+<button  class="btn" onclick="btn()" >
 START
 </button>`
 $('#cart').html(st);
+
 }
 function btn(){
+    if($('#username1').val()=='') {
+        alert('You have to set a username');
+        return;
+    }
+    if($('#username2').val()=='') {
+        alert('You have to set a username');
+        return;
+    }else{
+    login_to_game();
     let s="";
     let box=`<div id="pieces_board">
     <h3 id="select">select piece</h3>
@@ -47,6 +58,7 @@ function btn(){
     $('#box').html(box);
     draw_empty_board();
     fill_board();
+    }
 }
 
 
@@ -82,3 +94,44 @@ function fill_board_by_data(data) {
 	}
  
 	}
+
+
+    function login_to_game() {
+        
+       
+        
+        fill_board();
+        
+        $.ajax({url: "http://localhost/MyProject/quarto.php/players/", 
+                method: 'PUT',
+                dataType: "json",
+                headers: {"X-Token": me.token},
+                contentType: 'application/json',
+                data: JSON.stringify( {username: $('#username1').val()}),
+                success: login_result,
+                error: login_error});
+        
+        
+                $.ajax({url: "http://localhost/MyProject/quarto.php/players/", 
+                method: 'PUT',
+                dataType: "json",
+                headers: {"X-Token": me.token},
+                contentType: 'application/json',
+                data: JSON.stringify( {username: $('#username2').val()}),
+                success: login_result,
+                error: login_error});
+        }
+
+        function login_result(data) {
+            me = data[0];
+            $('#game_initializer').hide();
+            update_info();
+            game_status_update();
+        }
+
+
+
+        function login_error(data,y,z,c) {
+            var x = data.responseJSON;
+            alert(x.errormesg);
+        }
