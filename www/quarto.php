@@ -3,6 +3,7 @@
 require_once "../lib/dbconnect.php";
 require_once "../lib/board.php";
 require_once "../lib/game.php";
+require_once "../lib/users.php";
 
 $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
@@ -46,7 +47,12 @@ function handle_piece($method,$x,$y,$input) {
   
 }
 
-function handle_player($method,$p,$input) {}
+function handle_player($method,$p,$input) {
+        $b=array_shift($p);
+        handle_user($method, $b,$input);
+        echo '<script>alert("Welcome to Geeks for Geeks")</script>';
+       
+}
 
 function handle_status($method) {
         if($method=='GET') {

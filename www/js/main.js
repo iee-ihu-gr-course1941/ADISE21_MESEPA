@@ -3,7 +3,7 @@ var game_status={};
 
 
 $(function () {
-    $('#btn').click(draw_empty_board);
+    // $('#btn').click(draw_empty_board);
 	start();
 });
 
@@ -102,36 +102,33 @@ function fill_board_by_data(data) {
         
         fill_board();
         
-        $.ajax({url: "http://localhost/MyProject/quarto.php/players/", 
+        var p_color ='B'
+        // draw_empty_board(p_color);
+        fill_board();
+        
+        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
                 method: 'PUT',
                 dataType: "json",
-                headers: {"X-Token": me.token},
+                // headers: {"X-Token": me.token},
                 contentType: 'application/json',
-                data: JSON.stringify( {username: $('#username1').val()}),
+                data: JSON.stringify( {username1: $('#username1').val(), piece_color: p_color,username2: $('#username2').val()}),
                 success: login_result,
                 error: login_error});
+               
         
-        
-                $.ajax({url: "http://localhost/MyProject/quarto.php/players/", 
-                method: 'PUT',
-                dataType: "json",
-                headers: {"X-Token": me.token},
-                contentType: 'application/json',
-                data: JSON.stringify( {username: $('#username2').val()}),
-                success: login_result,
-                error: login_error});
+               
         }
 
         function login_result(data) {
             me = data[0];
-            $('#game_initializer').hide();
-            update_info();
-            game_status_update();
+            // $('#game_initializer').hide();
+            // update_info();
+            // game_status_update();
         }
 
 
 
         function login_error(data,y,z,c) {
             var x = data.responseJSON;
-            alert(x.errormesg);
+            // alert(x.errormesg);
         }
