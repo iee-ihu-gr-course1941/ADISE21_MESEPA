@@ -132,3 +132,38 @@ function fill_board_by_data(data) {
             var x = data.responseJSON;
             // alert(x.errormesg);
         }
+
+
+        function game_status_update() {
+	
+            clearTimeout(timer);
+            $.ajax({url: "chess.php/status/", success: update_status,headers: {"X-Token": me.token} });
+        }
+        
+        function update_status(data) {
+            last_update=new Date().getTime();
+            var game_stat_old = game_status;
+            game_status=data[0];
+            update_info();
+            clearTimeout(timer);
+            if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
+                x=0;
+                // do play
+                if(game_stat_old.p_turn!=game_status.p_turn) {
+                    fill_board();
+                }
+                $('#move_div').show(1000);
+                timer=setTimeout(function() { game_status_update();}, 15000);
+            } else {
+                // must wait for something
+                $('#move_div').hide(1000);
+                timer=setTimeout(function() { game_status_update();}, 4000);
+            }
+             
+        }
+        
+        function update_info(){
+            $('#game_info').html("I am Player: "+me.piece_color+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
+            
+            
+        }

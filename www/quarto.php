@@ -48,7 +48,7 @@ function handle_piece($method,$x,$y,$input) {
 }
 
 function handle_player($method,$p,$input) {
-      
+      $b=0;
         handle_user($method, $b,$input);  
         
 }

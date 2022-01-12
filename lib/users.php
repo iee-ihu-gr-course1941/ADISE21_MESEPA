@@ -16,16 +16,16 @@ function set_user($b,$input) {
 //     print json_encode(['errormesg'=>"No username given."]);
 //     exit;
 // }
-$b="B";
+$b=1;
 $username=$input['username1'];
 global $mysqli;
-$sql = 'update players set username=?, token=md5(CONCAT( ?, NOW()))  where piece_color=?';
+$sql = 'update players set username=?, token=md5(CONCAT( ?, NOW()))  where player=?';
 $st2 = $mysqli->prepare($sql);
 $st2->bind_param('sss',$username,$username,$b);
 $st2->execute();
 $username=$input['username2'];
-$b="W";
-$sql = 'update players set username=?, token=md5(CONCAT( ?, NOW()))  where piece_color=?';
+$b=2;
+$sql = 'update players set username=?, token=md5(CONCAT( ?, NOW()))  where player=?';
 $st2 = $mysqli->prepare($sql);
 $st2->bind_param('sss',$username,$username,$b);
 $st2->execute();
@@ -33,7 +33,7 @@ $st2->execute();
 
 
 update_game_status();
-$sql = 'select * from players where piece_color=?';
+$sql = 'select * from players where player=?';
 $st = $mysqli->prepare($sql);
 $st->bind_param('s',$b);
 $st->execute();
