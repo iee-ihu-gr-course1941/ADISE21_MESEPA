@@ -48,10 +48,9 @@ function handle_piece($method,$x,$y,$input) {
 }
 
 function handle_player($method,$p,$input) {
-        $b=array_shift($p);
-        handle_user($method, $b,$input);
-        echo '<script>alert("Welcome to Geeks for Geeks")</script>';
-       
+      
+        handle_user($method, $b,$input);  
+        
 }
 
 function handle_status($method) {

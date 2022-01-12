@@ -111,7 +111,7 @@ function fill_board_by_data(data) {
                 dataType: "json",
                 // headers: {"X-Token": me.token},
                 contentType: 'application/json',
-                data: JSON.stringify( {username1: $('#username1').val(), piece_color: p_color,username2: $('#username2').val()}),
+                data: JSON.stringify( {username1: $('#username1').val(),username2: $('#username2').val()}),
                 success: login_result,
                 error: login_error});
                
