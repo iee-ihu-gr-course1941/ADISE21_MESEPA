@@ -1,10 +1,14 @@
 var me={token:null,piece_color:null};
 var game_status={};
+var board={};
+var last_update=new Date().getTime();
+var timer=null;
 
 
 $(function () {
     // $('#btn').click(draw_empty_board);
 	start();
+    game_status_update();
 });
 
 function start(){
@@ -123,28 +127,28 @@ function fill_board_by_data(data) {
             me = data[0];
             // $('#game_initializer').hide();
             // update_info();
-            // game_status_update();
+            game_status_update();
         }
 
 
 
         function login_error(data,y,z,c) {
             var x = data.responseJSON;
-            // alert(x.errormesg);
+            alert(x.errormesg);
         }
 
 
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "chess.php/status/", success: update_status,headers: {"X-Token": me.token} });
+            $.ajax({url: "http://localhost/MyProject/quarto.php/status", success: update_status });
         }
         
         function update_status(data) {
             last_update=new Date().getTime();
             var game_stat_old = game_status;
             game_status=data[0];
-            update_info();
+            // update_info();
             clearTimeout(timer);
             if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
                 x=0;
@@ -157,6 +161,7 @@ function fill_board_by_data(data) {
             } else {
                 // must wait for something
                 $('#move_div').hide(1000);
+                console.log(game_status.p_turn);
                 timer=setTimeout(function() { game_status_update();}, 4000);
             }
              
@@ -165,5 +170,25 @@ function fill_board_by_data(data) {
         function update_info(){
             $('#game_info').html("I am Player: "+me.piece_color+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
             
+            
+        }
+
+
+        function do_move() {
+            var s = $('#the_move').val();
+            
+            var a = s.trim().split(/[ ]+/);
+            if(a.length!=4) {
+                alert('Must give 4 numbers');
+                return;
+            }
+            $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1], 
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify( {x: a[2], y: a[3]}),
+                    headers: {"X-Token": me.token},
+                    success: move_result,
+                    error: login_error});
             
         }
