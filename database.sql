@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v13.1.1 (64 bit)
-MySQL - 10.3.31-MariaDB-0+deb10u1-log : Database - quarto_mesepa
+MySQL - 10.4.22-MariaDB : Database - quarto_mesepa
 *********************************************************************
 */
 
@@ -31,7 +31,7 @@ CREATE TABLE `board` (
 /*Data for the table `board` */
 
 insert  into `board`(`x`,`y`,`piece_color`,`piece`) values 
-(1,1,NULL,NULL),
+(1,1,'B','SLS'),
 (2,1,NULL,NULL),
 (3,1,NULL,NULL),
 (4,1,NULL,NULL),
@@ -40,7 +40,7 @@ insert  into `board`(`x`,`y`,`piece_color`,`piece`) values
 (3,2,NULL,NULL),
 (4,2,NULL,NULL),
 (1,3,NULL,NULL),
-(2,3,'B','CLS'),
+(2,3,NULL,NULL),
 (3,3,NULL,NULL),
 (4,3,NULL,NULL),
 (1,4,NULL,NULL),
@@ -94,8 +94,7 @@ CREATE TABLE `game_status` (
 /*Data for the table `game_status` */
 
 insert  into `game_status`(`status`,`p_turn`,`result`,`last_change`) values 
-('not active',NULL,'1','2021-12-14 13:38:20'),
-('not active','1','D','2021-12-14 13:41:27');
+('not active',NULL,NULL,'2021-12-23 14:18:32');
 
 /*Table structure for table `players` */
 
@@ -103,17 +102,17 @@ DROP TABLE IF EXISTS `players`;
 
 CREATE TABLE `players` (
   `username` varchar(20) DEFAULT NULL,
-  `piece_color` enum('B','W') NOT NULL,
+  `player` tinyint(1) NOT NULL,
   `token` varchar(100) DEFAULT NULL,
   `last_action` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`piece_color`)
+  PRIMARY KEY (`player`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `players` */
 
-insert  into `players`(`username`,`piece_color`,`token`,`last_action`) values 
-(NULL,'B',NULL,NULL),
-(NULL,'W',NULL,NULL);
+insert  into `players`(`username`,`player`,`token`,`last_action`) values 
+('eddy',1,'a8d252b01605800206479bae438ed81c',NULL),
+('koka',2,'0d2bf9ed27bd319cda7837c21119ca4f',NULL);
 
 /* Trigger structure for table `game_status` */
 
