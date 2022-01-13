@@ -1,5 +1,5 @@
 <?php 
-function show_board(){
+function show_board($input){
 
     global $mysqli;
     $sql = 'select * from board' ;
@@ -18,5 +18,3 @@ function reset_board() {
     $mysqli->query($sql);
     show_board() ;
 }
-
-?>

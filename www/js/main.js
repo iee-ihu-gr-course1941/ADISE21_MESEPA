@@ -31,7 +31,10 @@ function selectPiece(event) {
         //console.log(event.target.id);
         let text = event.target.id;
         const myArray = text.split("_");
-        console.log(`${myArray[0]},${myArray[1]}`);
+        // console.log(`${myArray[0]}${myArray[1]}`);
+        let v =myArray[0]+myArray[1]
+        console.log(v);
+        return v;
     }
 }
 
@@ -43,6 +46,7 @@ function selectPlacement(){
         console.log(positionArray);
         squarePosition = `${positionArray[1]},${positionArray[2]}`
         console.log(squarePosition);
+        return squarePosition;
 
 
     }
@@ -105,7 +109,10 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/quarto/quarto.php/board", method: 'get',success: fill_board_by_data });
+	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
+    headers: {"X-Token": me.token},
+     method: 'get',
+     success: fill_board_by_data });
 }
 
 function fill_board_by_data(data) {
@@ -114,9 +121,11 @@ function fill_board_by_data(data) {
 		var o = data[i];
 		var id = '#square_'+ o.x +'_' + o.y;
 		var c = (o.piece!=null)?o.piece_color + o.piece:'';
+        
 		var pc= (o.piece!=null)?'piece'+o.piece_color:'';
 		var im = (o.piece!=null)?'<img class="piece" src="images/pieces/'+c+'.jpg">':`${o.x},${o.y}`;
         // var im = (o.piece!=null)?c:'';
+    
 		$(id).addClass(o.b_color+'_square').html(im);
 	}
  
@@ -133,10 +142,10 @@ function fill_board_by_data(data) {
         // draw_empty_board(p_color);
         fill_board();
         
-        $.ajax({url: "http://localhost/quarto/quarto.php/players",
+        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
                 method: 'PUT',
                 dataType: "json",
-                // headers: {"X-Token": me.token},
+                headers: {"X-Token": me.token},
                 contentType: 'application/json',
                 data: JSON.stringify( {username1: $('#username1').val(),username2: $('#username2').val()}),
                 success: login_result,
@@ -164,7 +173,9 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/quarto/quarto.php/status", success: update_status });
+            $.ajax({url: "http://localhost/MyProject/quarto.php/status",
+            headers: {"X-Token": me.token},
+            success: update_status });
         }
         
         function update_status(data) {
@@ -184,7 +195,6 @@ function fill_board_by_data(data) {
             } else {
                 // must wait for something
                 $('#move_div').hide(1000);
-                console.log(game_status.p_turn);
                 timer=setTimeout(function() { game_status_update();}, 4000);
             }
              
@@ -198,23 +208,21 @@ function fill_board_by_data(data) {
 
 
         function do_move() {
-
-
-            //<img src="images/pieces/BCLH.jpg" class="pieces">
-            // var s = $('#the_move').val();
-            //
-            // var a = s.trim().split(/[ ]+/);
-            // if(a.length!=4) {
-            //     alert('Must give 4 numbers');
-            //     return;
-            // }
-            // $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1],
-            //         method: 'PUT',
-            //         dataType: "json",
-            //         contentType: 'application/json',
-            //         data: JSON.stringify( {x: a[2], y: a[3]}),
-            //         headers: {"X-Token": me.token},
-            //         success: move_result,
-            //         error: login_error});
-            //
+            
+            var a =  selectPiece();
+            
+            if(a.length!=4) {
+                alert('Must give 4 numbers');
+                return;
+            }
+            $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1], 
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify( {x: a[2], y: a[3]}),
+                    headers: {"X-Token": me.token},
+                    success: move_result,
+                    error: login_error});
+            
         }
+     
