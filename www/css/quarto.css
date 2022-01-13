@@ -89,7 +89,7 @@ text-shadow: 3px 3px;
     font-family:cursive;
     position: relative;
 }
-#select{
+.select{
     margin-left:55px;
 }
 .pieces{
