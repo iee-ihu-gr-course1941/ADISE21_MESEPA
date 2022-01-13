@@ -70,23 +70,17 @@ function move_piece($x,$y,$color,$piece,$token) {
 	// print json_encode(['errormesg'=>"This move is illegal."]);
 	// exit;
 }
-function do_move($x1,$y1,$color1,$piece1) {
-    $color='"' . $color1 . '"';
-    $piece='"' . $piece1 . '"';
-     $x=intval( $x1 );
-     $y=intval( $y1 );
-     echo $x,$y,$piece,$color;
-    
+function do_move($x,$y,$color,$piece) {
+
 	global $mysqli;
 	$sql = 'call `place_piece`(?,?,?,?);';
-    echo $sql;
 	$st = $mysqli->prepare($sql);
-	$st->bind_param('iiii',$x,$y,$piece,$color );
-    print_r($st);
+	$st->bind_param('ssss',$x,$y,$piece,$color );
 	$st->execute();
 
 	header('Content-type: application/json');
 	print json_encode(read_board(), JSON_PRETTY_PRINT);
+
 }
 
 
