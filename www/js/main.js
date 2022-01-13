@@ -24,8 +24,30 @@ st=` <div class="input-group">
 START
 </button>`
 $('#cart').html(st);
-
 }
+
+function selectPiece(event) {
+    if (event.target.tagName=="IMG") {
+        //console.log(event.target.id);
+        let text = event.target.id;
+        const myArray = text.split("_");
+        console.log(`${myArray[0]},${myArray[1]}`);
+    }
+}
+
+function selectPlacement(){
+    if (event.target.tagName=="TD") {
+        // console.log(event.target.id);
+        let squarePosition = event.target.id;
+        const positionArray = squarePosition.split("_");
+        console.log(positionArray);
+        squarePosition = `${positionArray[1]},${positionArray[2]}`
+        console.log(squarePosition);
+
+
+    }
+}
+
 function btn(){
     if($('#username1').val()=='') {
         alert('You have to set a username');
@@ -37,24 +59,25 @@ function btn(){
     }else{
     login_to_game();
     let s="";
-    let box=`<div id="pieces_board">
-    <h3 id="select">select piece</h3>
-   <img src="images/pieces/BCLH.jpg" class="pieces">
-   <img src="images/pieces/BCLS.jpg" class="pieces">
-   <img src="images/pieces/BCTH.jpg" class="pieces">
-   <img src="images/pieces/BCTS.jpg" class="pieces">
-   <img src="images/pieces/BSLH.jpg" class="pieces">
-   <img src="images/pieces/BSLS.jpg" class="pieces">
-   <img src="images/pieces/BSTH.jpg" class="pieces">
-   <img src="images/pieces/BSTS.jpg" class="pieces">
-   <img src="images/pieces/WCLH.jpg" class="pieces">
-   <img src="images/pieces/WCLS.jpg" class="pieces">
-   <img src="images/pieces/WCTH.jpg" class="pieces">
-   <img src="images/pieces/WCTS.jpg" class="pieces">
-   <img src="images/pieces/WSLH.jpg" class="pieces">
-   <img src="images/pieces/WSLS.jpg" class="pieces">
-   <img src="images/pieces/WSTH.jpg" class="pieces">
-   <img src="images/pieces/WSTS.jpg" class="pieces">
+    let box=`<div onclick="selectPiece(event)" id="pieces_board">
+    <h3 class="select">select piece</h3>
+   <img src="images/pieces/BCLH.jpg" class="pieces" id="B_CLH">
+   <img src="images/pieces/BCLS.jpg" class="pieces" id="B_CLS">
+   <img src="images/pieces/BCTH.jpg" class="pieces" id="B_CTH">
+   <img src="images/pieces/BCTS.jpg" class="pieces" id="B_CTS">
+   <img src="images/pieces/BSLH.jpg" class="pieces" id="B_SLH">
+   <img src="images/pieces/BSLS.jpg" class="pieces" id="B_SLS">
+   <img src="images/pieces/BSTH.jpg" class="pieces" id="B_STH">
+   <img src="images/pieces/BSTS.jpg" class="pieces" id="B_STS">
+   <img src="images/pieces/WCLH.jpg" class="pieces" id="W_CLH">
+   <img src="images/pieces/WCLS.jpg" class="pieces" id="W_CLS">
+   <img src="images/pieces/WCTH.jpg" class="pieces" id="W_CTH">
+   <img src="images/pieces/WCTS.jpg" class="pieces" id="W_CTS">
+   <img src="images/pieces/WSLH.jpg" class="pieces" id="W_SLH">
+   <img src="images/pieces/WSLS.jpg" class="pieces" id="W_SLS">
+   <img src="images/pieces/WSTH.jpg" class="pieces" id="W_STH">
+   <img src="images/pieces/WSTS.jpg" class="pieces" id="W_STS">
+   
    
     
   </div>`;
@@ -68,7 +91,7 @@ function btn(){
 
 
 function draw_empty_board(){
-    let t='<table id="quarto_table">';
+    let t='<table onclick="selectPlacement(event)" id="quarto_table">';
     for (let i=4; i>0; i--){
         t +='<tr>';
         for(let j=1; j<5; j++){
@@ -82,7 +105,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/MyProject/quarto.php/board", method: 'get',success: fill_board_by_data });
+	$.ajax({url: "http://localhost/quarto/quarto.php/board", method: 'get',success: fill_board_by_data });
 }
 
 function fill_board_by_data(data) {
@@ -92,7 +115,7 @@ function fill_board_by_data(data) {
 		var id = '#square_'+ o.x +'_' + o.y;
 		var c = (o.piece!=null)?o.piece_color + o.piece:'';
 		var pc= (o.piece!=null)?'piece'+o.piece_color:'';
-		var im = (o.piece!=null)?'<img class="piece" src="images/pieces/'+c+'.jpg">':'';
+		var im = (o.piece!=null)?'<img class="piece" src="images/pieces/'+c+'.jpg">':`${o.x},${o.y}`;
         // var im = (o.piece!=null)?c:'';
 		$(id).addClass(o.b_color+'_square').html(im);
 	}
@@ -110,7 +133,7 @@ function fill_board_by_data(data) {
         // draw_empty_board(p_color);
         fill_board();
         
-        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
+        $.ajax({url: "http://localhost/quarto/quarto.php/players",
                 method: 'PUT',
                 dataType: "json",
                 // headers: {"X-Token": me.token},
@@ -141,7 +164,7 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/MyProject/quarto.php/status", success: update_status });
+            $.ajax({url: "http://localhost/quarto/quarto.php/status", success: update_status });
         }
         
         function update_status(data) {
@@ -175,20 +198,23 @@ function fill_board_by_data(data) {
 
 
         function do_move() {
-            var s = $('#the_move').val();
-            
-            var a = s.trim().split(/[ ]+/);
-            if(a.length!=4) {
-                alert('Must give 4 numbers');
-                return;
-            }
-            $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1], 
-                    method: 'PUT',
-                    dataType: "json",
-                    contentType: 'application/json',
-                    data: JSON.stringify( {x: a[2], y: a[3]}),
-                    headers: {"X-Token": me.token},
-                    success: move_result,
-                    error: login_error});
-            
+
+
+            //<img src="images/pieces/BCLH.jpg" class="pieces">
+            // var s = $('#the_move').val();
+            //
+            // var a = s.trim().split(/[ ]+/);
+            // if(a.length!=4) {
+            //     alert('Must give 4 numbers');
+            //     return;
+            // }
+            // $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1],
+            //         method: 'PUT',
+            //         dataType: "json",
+            //         contentType: 'application/json',
+            //         data: JSON.stringify( {x: a[2], y: a[3]}),
+            //         headers: {"X-Token": me.token},
+            //         success: move_result,
+            //         error: login_error});
+            //
         }
