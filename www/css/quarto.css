@@ -79,7 +79,7 @@ text-shadow: 3px 3px;
 }
 
 #pieces_board{
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     width: 21%;
     height: 45vh;
     border-radius: 30px;

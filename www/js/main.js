@@ -3,7 +3,8 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
-
+var position;
+var sPiece;
 
 $(function () {
     // $('#btn').click(draw_empty_board);
@@ -32,9 +33,9 @@ function selectPiece(event) {
         let text = event.target.id;
         const myArray = text.split("_");
         // console.log(`${myArray[0]}${myArray[1]}`);
-        let v =myArray[0]+myArray[1]
-        console.log(v);
-        return v;
+        sPiece=myArray;
+        console.log(sPiece);
+        
     }
 }
 
@@ -43,13 +44,11 @@ function selectPlacement(){
         // console.log(event.target.id);
         let squarePosition = event.target.id;
         const positionArray = squarePosition.split("_");
-        console.log(positionArray);
-        squarePosition = `${positionArray[1]},${positionArray[2]}`
-        console.log(squarePosition);
-        return squarePosition;
-
+        position=positionArray;
+        console.log(position);
 
     }
+    do_move();
 }
 
 function btn(){
@@ -110,7 +109,7 @@ $('#quarto_board').html(t);
 
 function fill_board() {
 	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
-    headers: {"X-Token": me.token},
+    // headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
 }
@@ -179,24 +178,24 @@ function fill_board_by_data(data) {
         }
         
         function update_status(data) {
-            last_update=new Date().getTime();
-            var game_stat_old = game_status;
-            game_status=data[0];
-            // update_info();
-            clearTimeout(timer);
-            if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
-                x=0;
-                // do play
-                if(game_stat_old.p_turn!=game_status.p_turn) {
-                    fill_board();
-                }
-                $('#move_div').show(1000);
-                timer=setTimeout(function() { game_status_update();}, 15000);
-            } else {
-                // must wait for something
-                $('#move_div').hide(1000);
-                timer=setTimeout(function() { game_status_update();}, 4000);
-            }
+            // last_update=new Date().getTime();
+            // var game_stat_old = game_status;
+            // game_status=data[0];
+            // // update_info();
+            // clearTimeout(timer);
+            // if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
+            //     x=0;
+            //     // do play
+            //     if(game_stat_old.p_turn!=game_status.p_turn) {
+            //         fill_board();
+            //     }
+            //     $('#move_div').show(1000);
+            //     timer=setTimeout(function() { game_status_update();}, 15000);
+            // } else {
+            //     // must wait for something
+            //     $('#move_div').hide(1000);
+            //     timer=setTimeout(function() { game_status_update();}, 4000);
+            // }
              
         }
         
@@ -208,21 +207,23 @@ function fill_board_by_data(data) {
 
 
         function do_move() {
+            console.log("dsfsd")
+            var a =position;
+            var b =sPiece;
+            console.log(b,position);
             
-            var a =  selectPiece();
-            
-            if(a.length!=4) {
-                alert('Must give 4 numbers');
-                return;
-            }
-            $.ajax({url: "chess.php/board/piece/"+a[0]+'/'+a[1], 
+          
+            $.ajax({url: "http://localhost/MyProject/quarto.php/board/piece", 
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
-                    data: JSON.stringify( {x: a[2], y: a[3]}),
+                    data: JSON.stringify( {x: a[1], y: a[2], color: b[0], piece: b[1]}),
                     headers: {"X-Token": me.token},
                     success: move_result,
                     error: login_error});
             
         }
-     
+        function move_result(data){
+            game_status_update();
+            fill_board_by_data(data);
+        }

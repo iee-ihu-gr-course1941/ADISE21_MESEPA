@@ -45,7 +45,7 @@ print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
 
 
-function current_color($token) {
+function current_player($token) {
 	
 	global $mysqli;
 	if($token==null) {return(null);}
@@ -55,6 +55,7 @@ function current_color($token) {
 	$st->execute();
 	$res = $st->get_result();
 	if($row=$res->fetch_assoc()) {
+		print_r($row['player']);
 		return($row['player']);
 	}
 	return(null);
