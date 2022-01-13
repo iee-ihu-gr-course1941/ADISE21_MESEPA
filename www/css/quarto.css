@@ -96,3 +96,7 @@ text-shadow: 3px 3px;
     margin:5px;
     cursor: pointer;
 }
+
+.picked{
+    display: none;
+}
