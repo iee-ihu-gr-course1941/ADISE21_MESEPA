@@ -35,6 +35,7 @@ function selectPiece(event) {
         // console.log(`${myArray[0]}${myArray[1]}`);
         sPiece=myArray;
         console.log(sPiece);
+        event.target.classList.add("picked");
         
     }
 }
@@ -108,7 +109,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
+	$.ajax({url: "http://localhost/quarto/quarto.php/board",
     // headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
@@ -141,7 +142,7 @@ function fill_board_by_data(data) {
         // draw_empty_board(p_color);
         fill_board();
         
-        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
+        $.ajax({url: "http://localhost/quarto/quarto.php/players",
                 method: 'PUT',
                 dataType: "json",
                 headers: {"X-Token": me.token},
@@ -172,7 +173,7 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/MyProject/quarto.php/status",
+            $.ajax({url: "http://localhost/quarto/quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
         }
@@ -213,7 +214,7 @@ function fill_board_by_data(data) {
             console.log(b,position);
             
           
-            $.ajax({url: "http://localhost/MyProject/quarto.php/board/piece", 
+            $.ajax({url: "http://localhost/quarto/quarto.php/board/piece",
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
@@ -221,7 +222,8 @@ function fill_board_by_data(data) {
                     headers: {"X-Token": me.token},
                     success: move_result,
                     error: login_error});
-            
+
+
         }
         function move_result(data){
             game_status_update();
