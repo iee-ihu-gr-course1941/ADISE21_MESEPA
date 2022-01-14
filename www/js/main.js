@@ -4,7 +4,7 @@ var board={};
 var last_update=new Date().getTime();
 var timer=null;
 var position;
-var sPiece;
+var sPiece="";
 
 $(function () {
     // $('#btn').click(draw_empty_board);
@@ -28,15 +28,19 @@ $('#cart').html(st);
 }
 
 function selectPiece(event) {
-    if (event.target.tagName=="IMG") {
-        //console.log(event.target.id);
-        let text = event.target.id;
-        const myArray = text.split("_");
-        // console.log(`${myArray[0]}${myArray[1]}`);
-        sPiece=myArray;
-        console.log(sPiece);
-        event.target.classList.add("picked");
-        
+    if (sPiece!="") {
+        return sPiece;}
+    else{
+        if (event.target.tagName == "IMG") {
+            //console.log(event.target.id);
+            let text = event.target.id;
+            const myArray = text.split("_");
+            // console.log(`${myArray[0]}${myArray[1]}`);
+            sPiece = myArray;
+            console.log(sPiece);
+            event.target.classList.add("picked");
+
+        }
     }
 }
 
@@ -222,7 +226,7 @@ function fill_board_by_data(data) {
                     headers: {"X-Token": me.token},
                     success: move_result,
                     error: login_error});
-
+            sPiece="";
 
         }
         function move_result(data){
