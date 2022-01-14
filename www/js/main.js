@@ -109,7 +109,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/quarto/quarto.php/board",
+	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
     // headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
@@ -142,7 +142,7 @@ function fill_board_by_data(data) {
         // draw_empty_board(p_color);
         fill_board();
         
-        $.ajax({url: "http://localhost/quarto/quarto.php/players",
+        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
                 method: 'PUT',
                 dataType: "json",
                 headers: {"X-Token": me.token},
@@ -173,30 +173,30 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/quarto/quarto.php/status",
+            $.ajax({url: "http://localhost/MyProject/quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
         }
         
         function update_status(data) {
-            // last_update=new Date().getTime();
-            // var game_stat_old = game_status;
-            // game_status=data[0];
-            // // update_info();
-            // clearTimeout(timer);
-            // if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
-            //     x=0;
-            //     // do play
-            //     if(game_stat_old.p_turn!=game_status.p_turn) {
-            //         fill_board();
-            //     }
-            //     $('#move_div').show(1000);
-            //     timer=setTimeout(function() { game_status_update();}, 15000);
-            // } else {
-            //     // must wait for something
-            //     $('#move_div').hide(1000);
-            //     timer=setTimeout(function() { game_status_update();}, 4000);
-            // }
+            last_update=new Date().getTime();
+            var game_stat_old = game_status;
+            game_status=data[0];
+            // update_info();
+            clearTimeout(timer);
+            if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
+                x=0;
+                // do play
+                if(game_stat_old.p_turn!=game_status.p_turn) {
+                    fill_board();
+                }
+                // $('#move_div').show(1000);
+                timer=setTimeout(function() { game_status_update();}, 15000);
+            } else {
+                // must wait for something
+                // $('#move_div').hide(1000);
+                timer=setTimeout(function() { game_status_update();}, 4000);
+            }
              
         }
         
@@ -214,7 +214,7 @@ function fill_board_by_data(data) {
             console.log(b,position);
             
           
-            $.ajax({url: "http://localhost/quarto/quarto.php/board/piece",
+            $.ajax({url: "http://localhost/MyProject/quarto.php/board/piece",
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
