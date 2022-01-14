@@ -63,7 +63,7 @@ function move_piece($x,$y,$color,$piece,$token) {
 	}
     else{
     do_move($x,$y,$color,$piece);
-	update_game_status();
+	
         exit;
     }
 
