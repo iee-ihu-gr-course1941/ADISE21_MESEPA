@@ -117,7 +117,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
+	$.ajax({url: "http://localhost/quarto/quarto.php/board",
     headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
@@ -147,39 +147,38 @@ function fill_board_by_data(data) {
             
         }
        
-        
-        fill_board();
+
         
         var player =$('#player').val();
-         draw_empty_board();
+         // draw_empty_board();
         fill_board();
         
-        $.ajax({url: "http://localhost/MyProject/quarto.php/players/"+player,
+        $.ajax({url: "http://localhost/quarto/quarto.php/players/"+player,
+
                 method: 'PUT',
                 dataType: "json",
                 headers: {"X-Token": me.token},
                 contentType: 'application/json',
                 data: JSON.stringify( {username1: $('#username1').val(), player: player}),
                 success: login_result,
-                error: login_error}
-                );
-               
-        
-               
+                error: login_error
+        });
+
         }
 
         function login_result(data) {
+            console.log("paok");
             me = data[0];
-            // $('#game_initializer').hide();
-            // update_info();
-            game_status_update();
+            // // $('#game_initializer').hide();
+            // // update_info();
+            // game_status_update();
         }
 
 
 
         function login_error(data,y,z,c) {
             var x = data.responseJSON;
-            console.log(data);
+            console.log(data.response);
             alert(x.errormesg);
         }
 
@@ -187,7 +186,7 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/MyProject/quarto.php/status",
+            $.ajax({url: "http://localhost/quarto/quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
         }
@@ -228,7 +227,7 @@ function fill_board_by_data(data) {
             console.log(b,position);
             
           
-            $.ajax({url: "http://localhost/MyProject/quarto.php/board/piece",
+            $.ajax({url: "http://localhost/quarto/quarto.php/board/piece",
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
