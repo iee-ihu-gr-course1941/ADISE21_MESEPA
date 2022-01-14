@@ -30,11 +30,11 @@ function reset_board() {
 
 function move_piece($x,$y,$color,$piece,$token) {
 	
-	if($token==null || $token=='') {
-		header("HTTP/1.1 400 Bad Request");
-		print json_encode(['errormesg'=>"token is not set."]);
-		exit;
-	}
+	// if($token==null || $token=='') {
+	// 	header("HTTP/1.1 400 Bad Request");
+	// 	print json_encode(['errormesg'=>"token is not set."]);
+	// 	exit;
+	// }
 	
 	// $player = current_player($token);
 	// if($player==null ) {

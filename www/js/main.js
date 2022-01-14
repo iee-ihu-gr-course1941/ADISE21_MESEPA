@@ -1,4 +1,4 @@
-var me={token:null,piece_color:null};
+var me={token:null,player:null};
 var game_status={};
 var board={};
 var last_update=new Date().getTime();
@@ -16,14 +16,21 @@ function start(){
 let st;
 st=` <div class="input-group">
 <div class="input-group-prepend">
-  <span class="input-group-text" id="">Name of a&b player</span>
+  <span class="input-group-text" id="">Name of  player</span>
 </div>
 <input type="text" class="form-control" id="username1">
-<input type="text" class="form-control" id="username2">
 </div>
 <button  class="btn" onclick="btn()" >
 START
-</button>`
+</button>
+<label for="player">Choose a player:</label>
+
+<select name="player" id="player">
+  <option value="1">Player 1</option>
+  <option value="2">Player2</option>
+
+</select>
+`
 $('#cart').html(st);
 }
 
@@ -60,10 +67,7 @@ function btn(){
     if($('#username1').val()=='') {
         alert('You have to set a username');
         return;
-    }
-    if($('#username2').val()=='') {
-        alert('You have to set a username');
-        return;
+    
     }else{
     login_to_game();
     let s="";
@@ -114,7 +118,7 @@ $('#quarto_board').html(t);
 
 function fill_board() {
 	$.ajax({url: "http://localhost/MyProject/quarto.php/board",
-    // headers: {"X-Token": me.token},
+    headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
 }
@@ -137,23 +141,28 @@ function fill_board_by_data(data) {
 
 
     function login_to_game() {
-        
+        if($('#username1').val()=='') {
+            alert('You have to set a username');
+                return;
+            
+        }
        
         
         fill_board();
         
-        var p_color ='B'
-        // draw_empty_board(p_color);
+        var player =$('#player').val();
+         draw_empty_board();
         fill_board();
         
-        $.ajax({url: "http://localhost/MyProject/quarto.php/players",
+        $.ajax({url: "http://localhost/MyProject/quarto.php/players/"+player,
                 method: 'PUT',
                 dataType: "json",
                 headers: {"X-Token": me.token},
                 contentType: 'application/json',
-                data: JSON.stringify( {username1: $('#username1').val(),username2: $('#username2').val()}),
+                data: JSON.stringify( {username1: $('#username1').val(), player: player}),
                 success: login_result,
-                error: login_error});
+                error: login_error}
+                );
                
         
                
@@ -170,6 +179,7 @@ function fill_board_by_data(data) {
 
         function login_error(data,y,z,c) {
             var x = data.responseJSON;
+            console.log(data);
             alert(x.errormesg);
         }
 
@@ -188,7 +198,7 @@ function fill_board_by_data(data) {
             game_status=data[0];
             // update_info();
             clearTimeout(timer);
-            if(game_status.p_turn==me.piece_color &&  me.piece_color!=null) {
+            if(game_status.p_turn==me.player &&  me.player!=null) {
                 x=0;
                 // do play
                 if(game_stat_old.p_turn!=game_status.p_turn) {
