@@ -9,13 +9,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
-if($input==null) {
-        $input=[];
-    }
-    if(isset($_SERVER['HTTP_X_TOKEN'])) {
-        $input['token']=$_SERVER['HTTP_X_TOKEN'];
-    } else {
-        $input['token']='';
+if(isset($_SERVER['HTTP_X_TOKEN'])) {
+    $input['token']=$_SERVER['HTTP_X_TOKEN'];
     }
 
 switch ($r=array_shift($request)) {
@@ -43,16 +38,16 @@ switch ($r=array_shift($request)) {
                 exit;
 }
 
-function handle_board($method) {
+function handle_board($method,$input) {
     if($method=='GET') {
-            show_board();
+            show_board($input);
     } else if ($method=='POST') {
             reset_board();
    }else {
         header('HTTP/1.1 405 Method Not Allowed');
     }
 }
-function handle_piece($method,$input) {
+function handle_piece($method,$x,$y,$input) {
        
 
         if($method=='GET') {
