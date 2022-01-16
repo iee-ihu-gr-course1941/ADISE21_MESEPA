@@ -71,7 +71,8 @@ function btn(){
     }else{
     login_to_game();
     let s="";
-    let box=`<div onclick="selectPiece(event)" id="pieces_board">
+    let box=`<div><button class="btn" id="reset" onclick="reset_board()">Reset</button></div>
+    <div onclick="selectPiece(event)" id="pieces_board">
     <h3 class="select">select piece</h3>
    <img src="images/pieces/BCLH.jpg" class="pieces" id="B_CLH">
    <img src="images/pieces/BCLS.jpg" class="pieces" id="B_CLS">
@@ -91,6 +92,8 @@ function btn(){
    <img src="images/pieces/WSTS.jpg" class="pieces" id="W_STS">
    <div id='game_info'>
 </div>
+
+
    
    
     
@@ -246,3 +249,13 @@ function fill_board_by_data(data) {
             game_status_update();
             fill_board_by_data(data);
         }
+
+
+function reset_board() {
+    $.ajax({url: "quarto.php/board/", headers: {"X-Token": me.token}, method: 'POST',  success: fill_board_by_data });
+    $('#box').html(box).hide();
+    $('#quarto_table').hide();
+    start();
+    game_status_update();
+    $('#box').html(box).show();
+}
