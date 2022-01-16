@@ -65,7 +65,7 @@ function set_user($b,$input) {
 
 function current_player($token) {
 
-echo($token);
+
 	global $mysqli;
 	if($token==null) {return(null);}
 	$sql = 'select * from players where token=?';

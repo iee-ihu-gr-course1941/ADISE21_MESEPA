@@ -25,7 +25,7 @@ function show_board_by_player($b) {
 
 	
 	$board=read_board();
-	print($board);
+	
 	$status = read_status();
 	if($status['status']=='started' && $status['p_turn']==$b && $b!=null) {
 		// It my turn !!!!
@@ -49,33 +49,33 @@ function convert_board(&$orig_board) {
 
 function move_piece($x,$y,$color,$piece,$token) {
 	
-	// if($token==null || $token=='') {
-	// 	header("HTTP/1.1 400 Bad Request");
-	// 	print json_encode(['errormesg'=>"token is not set."]);
-	// 	exit;
-	// }
+	if($token==null || $token=='') {
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"token is not set."]);
+		exit;
+	}
 	
-	// $player = current_player($token);
-	// if($player==null ) {
-	// 	header("HTTP/1.1 400 Bad Request");
-	// 	print json_encode(['errormesg'=>"You are not a player of this game."]);
-	// 	exit;
-	// }
-	// $status = read_status();
-	// if($status['status']!='started') {
-	// 	header("HTTP/1.1 400 Bad Request");
-	// 	print json_encode(['errormesg'=>"Game is not in action."]);
-	// 	exit;
-	// }
-	// if($status['p_turn']!=$player) {
-	// 	header("HTTP/1.1 400 Bad Request");
-	// 	print json_encode(['errormesg'=>"It is not your turn."]);
-	// 	exit;
-	// }
-	// // $orig_board=read_board();
-	// $board=read_board();
+	$player = current_player($token);
+	if($player==null ) {
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"You are not a player of this game."]);
+		exit;
+	}
+	$status = read_status();
+	if($status['status']!='started') {
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"Game is not in action."]);
+		exit;
+	}
+	if($status['p_turn']!=$player) {
+		header("HTTP/1.1 400 Bad Request");
+		print json_encode(['errormesg'=>"It is not your turn."]);
+		exit;
+	}
+	// $orig_board=read_board();
+	$board=read_board();
 	$n = add_valid_moves_to_piece($x,$y);
-	if($n==false) {
+	if($n==0) {
 		header("HTTP/1.1 400 Bad Request");
 		print json_encode(['errormesg'=>"This piece cannot be placed."]);
 		exit;
@@ -145,4 +145,16 @@ function add_valid_moves_to_board(&$board,$b) {
 }
 }
 
+
+function show_piece($x,$y) {
+	global $mysqli;
+	
+	$sql = 'select * from board where x=? and y=?';
+	$st = $mysqli->prepare($sql);
+	$st->bind_param('ii',$x,$y);
+	$st->execute();
+	$res = $st->get_result();
+	header('Content-type: application/json');
+	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
+}
 ?>

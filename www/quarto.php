@@ -52,9 +52,9 @@ function handle_piece($method,$x,$y,$input) {
 
         if($method=='GET') {
                 show_piece($x,$y);
-            } else if ($method=='PUT') {
+        } else if ($method=='PUT') {
                 //     print_r ($input);
-                move_piece($input['x'],$input['y'],$input['color'],$input['piece'],$input['token']);
+                 move_piece($x,$y,$input['color'],$input['piece'],$input['token']);
             }
 }
 

@@ -89,6 +89,8 @@ function btn(){
    <img src="images/pieces/WSLS.jpg" class="pieces" id="W_SLS">
    <img src="images/pieces/WSTH.jpg" class="pieces" id="W_STH">
    <img src="images/pieces/WSTS.jpg" class="pieces" id="W_STS">
+   <div id='game_info'>
+</div>
    
    
     
@@ -117,7 +119,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/quarto/quarto.php/board",
+	$.ajax({url: "quarto.php/board",
     headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
@@ -153,7 +155,7 @@ function fill_board_by_data(data) {
          // draw_empty_board();
         fill_board();
         
-        $.ajax({url: "http://localhost/quarto/quarto.php/players/"+player,
+        $.ajax({url: "quarto.php/players/"+player,
 
                 method: 'PUT',
                 dataType: "json",
@@ -170,15 +172,15 @@ function fill_board_by_data(data) {
             console.log("paok");
             me = data[0];
             // // $('#game_initializer').hide();
-            // // update_info();
-            // game_status_update();
+            update_info();
+            fill_board();
+            game_status_update();
         }
 
 
 
         function login_error(data,y,z,c) {
             var x = data.responseJSON;
-            console.log(data.response);
             alert(x.errormesg);
         }
 
@@ -186,21 +188,26 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/quarto/quarto.php/status",
+            $.ajax({url: "quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
+            fill_board();
         }
         
         function update_status(data) {
             last_update=new Date().getTime();
             var game_stat_old = game_status;
+            
             game_status=data[0];
-            // update_info();
+            console.log(me.player);
+            update_info();
             clearTimeout(timer);
+            
             if(game_status.p_turn==me.player &&  me.player!=null) {
                 x=0;
                 // do play
                 if(game_stat_old.p_turn!=game_status.p_turn) {
+                    draw_empty_board();
                     fill_board();
                 }
                 // $('#move_div').show(1000);
@@ -214,24 +221,22 @@ function fill_board_by_data(data) {
         }
         
         function update_info(){
-            $('#game_info').html("I am Player: "+me.piece_color+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
+            $('#game_info').html("I am Player: "+me.player+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
             
             
         }
 
 
         function do_move() {
-            console.log("dsfsd")
             var a =position;
             var b =sPiece;
-            console.log(b,position);
             
           
-            $.ajax({url: "http://localhost/quarto/quarto.php/board/piece",
+            $.ajax({url: "quarto.php/board/piece/"+a[1]+'/'+a[2],
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
-                    data: JSON.stringify( {x: a[1], y: a[2], color: b[0], piece: b[1]}),
+                    data: JSON.stringify( {color: b[0], piece: b[1]}),
                     headers: {"X-Token": me.token},
                     success: move_result,
                     error: login_error});
@@ -239,6 +244,7 @@ function fill_board_by_data(data) {
 
         }
         function move_result(data){
+            console.log("move_result");
             game_status_update();
             fill_board_by_data(data);
         }
