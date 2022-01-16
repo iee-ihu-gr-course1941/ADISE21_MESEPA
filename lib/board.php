@@ -15,10 +15,11 @@ function show_board($input) {
 function reset_board() {
     global $mysqli;
 
-    $sql='call clean_board()';
+    $sql='call clean_board';
     $mysqli->query($sql);
-    show_board() ;
+    //show_board();
 }
+
 function show_board_by_player($b) {
 
 	global $mysqli;
@@ -102,7 +103,6 @@ function do_move($x,$y,$color,$piece) {
     print json_encode(read_board(), JSON_PRETTY_PRINT);
 
 }
-
 
 
 function read_board() {
