@@ -48,7 +48,7 @@ text-shadow: 3px 3px;
   .btn{
     padding: 10px 35px;
     background-color: transparent;
-     outline: none;
+    outline: none;
     transition: .6s ease;
     border-radius: 30px;
     color: rgb(190, 56, 38);
@@ -56,9 +56,30 @@ text-shadow: 3px 3px;
     margin-left: 40%;
     margin-top: 15%;
     font-family: cursive;
-    
-    
 }
+
+
+  #reset{
+      padding: 10px 35px;
+      padding-bottom: 10px;
+      background-color: transparent;
+      outline: none;
+      transition: .6s ease;
+      border-radius: 30px;
+      color: rgb(190, 56, 38);
+      position: fixed;
+      margin-top: 28%;
+      margin-left: 3%;
+      font-family: cursive;
+  }
+
+  #reset:hover{
+      cursor: pointer;
+      background-color: rgb(0, 0, 0);
+      color: rgb(255, 255, 255);
+      box-shadow: 0 0 5px rgb(0, 0, 0), 0 0 rgb(0, 0, 0), 0 0 15px rgb(2, 2, 2);
+      font-weight: bold;
+  }
 
 .btn:hover{
     cursor: pointer;
