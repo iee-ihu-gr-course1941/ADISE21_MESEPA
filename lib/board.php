@@ -3,7 +3,7 @@ function show_board($input) {
 
 	global $mysqli;
 	$b=current_player($input['token']);
-	print_r($b);
+	//print_r($b);
 	if($b) {
 		show_board_by_player($b);
 	} else {
@@ -133,7 +133,7 @@ for ($i = 0; $i <= 16; $i++) {
 }
 }
 
-function add_valid_moves_to_board(&$board,$b) {
+function add_valid_moves_to_board($board) {
 	$number_of_moves=0;
 	for ($i = 0; $i <= 16; $i++) {
 		for ($j = 0; $j <= 16; $j++) {
