@@ -46,7 +46,7 @@ function selectPiece(event) {
             sPiece = myArray;
             console.log(sPiece);
             event.target.classList.add("picked");
-
+            fill_board();
         }
     }
 }
@@ -121,8 +121,8 @@ $('#quarto_board').html(t);
 function fill_board() {
 	$.ajax({url: "quarto.php/board",
     headers: {"X-Token": me.token},
-     method: 'get',
-     success: fill_board_by_data });
+    method: 'get',
+    success: fill_board_by_data });
 }
 
 function fill_board_by_data(data) {
@@ -171,10 +171,10 @@ function fill_board_by_data(data) {
         function login_result(data) {
             console.log("paok");
             me = data[0];
-            // // $('#game_initializer').hide();
+            // $('#game_initializer').hide();
             update_info();
-            fill_board();
             game_status_update();
+            fill_board();
         }
 
 
@@ -186,12 +186,11 @@ function fill_board_by_data(data) {
 
 
         function game_status_update() {
-	
             clearTimeout(timer);
             $.ajax({url: "quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
-            fill_board();
+
         }
         
         function update_status(data) {
@@ -207,9 +206,10 @@ function fill_board_by_data(data) {
                 x=0;
                 // do play
                 if(game_stat_old.p_turn!=game_status.p_turn) {
-                    draw_empty_board();
-                    fill_board();
+
                 }
+                //draw_empty_board();
+                fill_board_by_data(data);
                 // $('#move_div').show(1000);
                 timer=setTimeout(function() { game_status_update();}, 15000);
             } else {
@@ -221,9 +221,8 @@ function fill_board_by_data(data) {
         }
         
         function update_info(){
+            fill_board();
             $('#game_info').html("I am Player: "+me.player+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
-            
-            
         }
 
 
@@ -244,7 +243,6 @@ function fill_board_by_data(data) {
 
         }
         function move_result(data){
-            console.log("move_result");
             game_status_update();
             fill_board_by_data(data);
         }
