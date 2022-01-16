@@ -117,7 +117,7 @@ $('#quarto_board').html(t);
 }
 
 function fill_board() {
-	$.ajax({url: "http://localhost/quarto/quarto.php/board",
+	$.ajax({url: "https://users.iee.ihu.gr/~it185251/ADISE21_MESEPA/www/quarto.php/board",
     headers: {"X-Token": me.token},
      method: 'get',
      success: fill_board_by_data });
@@ -153,7 +153,7 @@ function fill_board_by_data(data) {
          // draw_empty_board();
         fill_board();
         
-        $.ajax({url: "http://localhost/quarto/quarto.php/players/"+player,
+        $.ajax({url: "https://users.iee.ihu.gr/~it185251/ADISE21_MESEPA/www/quarto.php/players/"+player,
 
                 method: 'PUT',
                 dataType: "json",
@@ -186,7 +186,7 @@ function fill_board_by_data(data) {
         function game_status_update() {
 	
             clearTimeout(timer);
-            $.ajax({url: "http://localhost/quarto/quarto.php/status",
+            $.ajax({url: "https://users.iee.ihu.gr/~it185251/ADISE21_MESEPA/www/quarto.php/status",
             headers: {"X-Token": me.token},
             success: update_status });
         }
@@ -227,7 +227,7 @@ function fill_board_by_data(data) {
             console.log(b,position);
             
           
-            $.ajax({url: "http://localhost/quarto/quarto.php/board/piece",
+            $.ajax({url: "https://users.iee.ihu.gr/~it185251/ADISE21_MESEPA/www/quarto.php/board/piece",
                     method: 'PUT',
                     dataType: "json",
                     contentType: 'application/json',
