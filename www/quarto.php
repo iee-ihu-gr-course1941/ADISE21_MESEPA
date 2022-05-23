@@ -25,6 +25,8 @@ switch ($r=array_shift($request)) {
                                 break;
 			}
 		break;
+    case'piece_box':handle_piece_board($method,$input);
+                break;        
     case 'status': 
         if(sizeof($request)==0) 
                         {handle_status($method);}
@@ -83,6 +85,15 @@ function handle_status($method) {
             header('HTTP/1.1 405 Method Not Allowed');
         }
     }
+
+function handle_piece_board($method,$input){
+        if($method=='GET') {
+                show_piece_box($input);
+        }else if($method=='POST'){
+                delete_piece($input);
+               
+        }
+}
 
 
  ?>

@@ -5,6 +5,8 @@ var last_update=new Date().getTime();
 var timer=null;
 var position;
 var sPiece="";
+var piece="";
+var piece_color="";
 
 $(function () {
     // $('#btn').click(draw_empty_board);
@@ -41,12 +43,23 @@ function selectPiece(event) {
         if (event.target.tagName == "IMG") {
             //console.log(event.target.id);
             let text = event.target.id;
+            if(text[0]==="W"){
+                piece_color='W'
+                const myArray2 = text.split("W");
+                piece=myArray2[1]
+                console.log(piece,piece_color);
+            }else if(text[0]==="B"){
+                piece_color='B'
+                const myArray2 = text.split("B");
+                piece=myArray2[1]
+            }
             const myArray = text.split("_");
             // console.log(`${myArray[0]}${myArray[1]}`);
             sPiece = myArray;
             console.log(sPiece);
             event.target.classList.add("picked");
             fill_board();
+            delete_piece();
         }
     }
 }
@@ -74,23 +87,9 @@ function btn(){
     let box=`<div><button class="btn" id="reset" onclick="reset_board()">Reset</button></div>
     <div onclick="selectPiece(event)" id="pieces_board">
     <h3 class="select">select piece</h3>
-   <img src="images/pieces/BCLH.jpg" class="pieces" id="B_CLH">
-   <img src="images/pieces/BCLS.jpg" class="pieces" id="B_CLS">
-   <img src="images/pieces/BCTH.jpg" class="pieces" id="B_CTH">
-   <img src="images/pieces/BCTS.jpg" class="pieces" id="B_CTS">
-   <img src="images/pieces/BSLH.jpg" class="pieces" id="B_SLH">
-   <img src="images/pieces/BSLS.jpg" class="pieces" id="B_SLS">
-   <img src="images/pieces/BSTH.jpg" class="pieces" id="B_STH">
-   <img src="images/pieces/BSTS.jpg" class="pieces" id="B_STS">
-   <img src="images/pieces/WCLH.jpg" class="pieces" id="W_CLH">
-   <img src="images/pieces/WCLS.jpg" class="pieces" id="W_CLS">
-   <img src="images/pieces/WCTH.jpg" class="pieces" id="W_CTH">
-   <img src="images/pieces/WCTS.jpg" class="pieces" id="W_CTS">
-   <img src="images/pieces/WSLH.jpg" class="pieces" id="W_SLH">
-   <img src="images/pieces/WSLS.jpg" class="pieces" id="W_SLS">
-   <img src="images/pieces/WSTH.jpg" class="pieces" id="W_STH">
-   <img src="images/pieces/WSTS.jpg" class="pieces" id="W_STS">
-   <div id='game_info'>
+  
+ 
+   <div id='game_info'> 
 </div>
 
 
@@ -201,10 +200,9 @@ function fill_board_by_data(data) {
             var game_stat_old = game_status;
             
             game_status=data[0];
-            console.log(me.player);
             update_info();
             clearTimeout(timer);
-            
+            update_piece();
             if(game_status.p_turn==me.player &&  me.player!=null) {
                 x=0;
                 // do play
@@ -224,6 +222,7 @@ function fill_board_by_data(data) {
         }
         
         function update_info(){
+            update_piece();
             fill_board();
             $('#game_info').html("I am Player: "+me.player+", my name is "+me.username +'<br>Token='+me.token+'<br>Game state: '+game_status.status+', '+ game_status.p_turn+' must play now.');
         }
@@ -258,4 +257,36 @@ function reset_board() {
     start();
     game_status_update();
     $('#box').html(box).show();
+}
+
+
+
+function update_piece() {
+	$.ajax({url: "quarto.php/piece_box",
+    headers: {"X-Token": me.token},
+    method: 'get',
+    success: fill_piece_box_by_data});
+}
+let fill_piece_box_by_data=(data)=>{
+    for(var i=0;i<data.length;i++) {
+		var o = data[i];
+		var id = '#square_'+ o.x +'_' + o.y;
+		var c = (o.piece!=null)?o.piece_color + o.piece:'';
+		var pc= (o.piece!=null)?'piece'+o.piece_color:'';
+		var im = `<img src="images/pieces/${c}.jpg" class="pieces" id="${c}">`+ im
+        // var im = (o.piece!=null)?c:'';
+    
+	}
+    $('#pieces_board').html(im);
+
+}
+
+let delete_piece =()=>{
+    $.ajax({url: "quarto.php/piece_box",
+    method: 'POST',
+                dataType: "json",
+                headers: {"X-Token": me.token},
+                contentType: 'application/json',
+                data: JSON.stringify( {piece: piece, piece_color: piece_color}),
+        });
 }

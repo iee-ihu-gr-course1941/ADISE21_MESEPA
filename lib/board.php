@@ -157,4 +157,35 @@ function show_piece($x,$y) {
 	header('Content-type: application/json');
 	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
-?>
+
+function read_piece_box(){
+	global $mysqli;
+	$sql = 'select * from piece';
+	$st = $mysqli->prepare($sql);
+	$st->execute();
+	$res = $st->get_result();
+	return($res->fetch_all(MYSQLI_ASSOC));
+}
+function show_piece_box($input){
+		header('Content-type: application/json');
+		print json_encode(read_piece_box(), JSON_PRETTY_PRINT);
+
+}
+
+function delete_piece($input){
+	$piece=$input['piece'];
+	$piece_color=$input['piece_color'];
+	
+	global $mysqli;
+	$sql = 'update piece 
+	set piece_color=null,
+	piece=null 
+	where piece_color=? and piece=?';
+	$st = $mysqli->prepare($sql);
+	$st->bind_param('ss',$piece_color,$piece);
+	$st->execute();
+	print_r($piece);
+	
+	
+}
+?> 
